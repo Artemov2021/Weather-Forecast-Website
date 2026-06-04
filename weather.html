@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/weather.css">
+    <script src="js/weather.js" type="module" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <main class="main-section">
+        <div class="input-container">
+            <input class="input" type="text" placeholder="Search for another city...">
+            <img class="location-symbol" src="assets/images/location.png">
+            <p class="location-city"></p>
+            <img class="search-loop" src="assets/images/search-loop.png">
+        </div>
+
+        <div class="temperature-container">
+            <p class="temperature">15°</p>
+            <div class="weather-state-container">
+                <img class="state-symbol" src="assets/images/sunny-state.png">
+                <p class="state">Sunny</p>
+            </div>
+        </div>
+
+        <div class="secondary-info-container">
+            <div class="secondary-info-block" style="animation: fadeLeft 0.85s ease 0.2s forwards">
+                <div class="content">
+                    <p class="air-info-title">Humidity</p>
+                    <div class="value-container">
+                        <img class="value-symbol" src="assets/images/humidity-symbol.png">
+                        <p id="humidity" class="value">76%</p>
+                    </div>
+                </div>
+                <div class="content">
+                    <p class="air-info-title">Air Quality</p>
+                    <div class="value-container">
+                        <img class="value-symbol" src="assets/images/air-quality-symbol.png">
+                        <p id="air-quality" class="value">Good</p>
+                    </div>
+                </div>
+                 <div class="content">
+                    <p class="air-info-title">UV</p>
+                    <div class="value-container">
+                        <img class="value-symbol" src="assets/images/uv-symbol.png">
+                        <p id="uv" class="value">High</p>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-info-block" style="animation: fadeLeft 0.85s ease 0.2s forwards">
+                <div class="content">
+                    <p class="air-info-title">Sunrise:</p>
+                    <div class="value-container">
+                        <p id="sunrise" class="value">7:12</p>
+                    </div>
+                </div>
+                <div class="content">
+                    <img class="sun-phase-image" src="assets/images/sun-phase.png">
+                </div>
+                 <div class="content">
+                    <p class="air-info-title">Sunset:</p>
+                    <div class="value-container">
+                        <p id="sunset" class="value">21:12</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weather-forecast-container" style="animation: fadeLeft 0.85s ease 0.4s forwards">
+            <div class="timeline-container">
+                <p class="dashboard-title-highlighted">Now</p>
+                <p class="dashboard-title-default">13:00</p>
+                <p class="dashboard-title-default">14:00</p>
+                <p class="dashboard-title-default">15:00</p>
+                <p class="dashboard-title-default">16:00</p>
+                <p class="dashboard-title-default">17:00</p>
+                <p class="dashboard-title-default">18:00</p>
+            </div>
+            <div class="temperature-line-container"> <svg viewBox="0 0 748 150">
+                    <defs>
+                        <linearGradient id="redToYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#f77123;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#f5c66d;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <line x1="4" y1="2" x2="133" y2="75" stroke="url(#redToYellow)" stroke-width="4" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <line x1="133" y1="75" x2="252" y2="25" class="temperature-line" />
+                    <line x1="252" y1="25" x2="372" y2="90" class="temperature-line" />
+                    <line x1="372" y1="90" x2="492" y2="35" class="temperature-line" />
+                    <line x1="492" y1="35" x2="610.5" y2="50" class="temperature-line" />
+                    <line x1="610.5" y1="50" x2="745" y2="17" class="temperature-line" />
+                </svg>
+            </div>
+            <div class="status-symbols-container">
+                <img src="assets/images/sunny.png">
+                <img src="assets/images/cloudy.png">
+                <img src="assets/images/night.png">
+                <img src="assets/images/cloudy.png">
+                <img src="assets/images/sunny.png">
+                <img src="assets/images/rainy.png">
+                <img src="assets/images/snowy.png">
+            </div>
+        </div>
+
+        <div class="weather-forecast-container" style="animation: fadeLeft 0.85s ease 0.5s forwards">
+            <div class="timeline-container">
+                <p class="dashboard-title-highlighted">Today</p>
+                <p class="dashboard-title-default">Mon</p>
+                <p class="dashboard-title-default">Tue</p>
+                <p class="dashboard-title-default">Wed</p>
+                <p class="dashboard-title-default">Thu</p>
+            </div>
+                <div class="temperature-line-container"> <svg viewBox="0 0 748 150">
+                    <defs>
+                        <linearGradient id="redToYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#f77123;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#f5c66d;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <line x1="4" y1="2" x2="210" y2="75" stroke="url(#redToYellow)" stroke-width="4" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <line x1="210" y1="75" x2="385" y2="25" class="temperature-line" />
+                    <line x1="385" y1="25" x2="558" y2="90" class="temperature-line" />
+                    <line x1="558" y1="90" x2="745" y2="17" class="temperature-line" />
+                </svg>
+                </div>
+            <div class="status-symbols-container">
+                <img src="assets/images/sunny.png">
+                <img src="assets/images/cloudy.png">
+                <img src="assets/images/night.png">
+                <img src="assets/images/cloudy.png">
+                <img src="assets/images/sunny.png">
+            </div>
+        </div>
+        
+
+    </main>
+</body>
+</html>
