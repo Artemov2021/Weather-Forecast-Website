@@ -31,14 +31,20 @@ async function handleCityClick(city,placeId) {
     input.value = city;
 
     try {
-        const weatherData = await getWeatherData(placeId,city);
+        setLoadingStyle();
+       /*  const weatherData = await getWeatherData(placeId,city);
         localStorage.setItem("weatherData",JSON.stringify(weatherData));
         window.location.href = `weather.html`;
-        input.value = "";
+        input.value = ""; */
     } catch(e) {
         alert("Failed to fetch the weather data");
         console.error(e);
     }
+}
+
+function setLoadingStyle() {
+    input.classList.add("input-loading");
+    input.disabled = true;
 }
 
 async function getWeatherData(placeId,city) {

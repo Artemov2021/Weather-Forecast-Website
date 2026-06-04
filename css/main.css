@@ -51,14 +51,20 @@ h2 {
     background-color: rgba(217,217,217,0.1);
     backdrop-filter: blur(38.5px);
     border-radius: 14px;
-    color: rgba(255, 255, 255);
+    color: rgba(255, 255, 255,1);
 
     font-size: 1rem;
     padding: 0.25rem 3em 0.15rem 1rem;
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input-loading {
+    border: 0.10px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255,0.7);
+    cursor: wait;
 }
 
 .search-loop {
