@@ -1,4 +1,7 @@
+import { initializeELements,handleInput } from "./utils.js";
+
 const input = document.querySelector(".input");
+const inputContainer = document.querySelector(".input-container");
 const location = document.querySelector(".location-city");
 const temperature = document.querySelector(".temperature-container .temperature");
 const state = document.querySelector(".temperature-container .state");
@@ -9,16 +12,7 @@ const uv = document.querySelector("#uv");
 const sunrise = document.querySelector("#sunrise");
 const sunset = document.querySelector("#sunset");
 
-function printCity(city) {
-    const cityElement = document.querySelector("#weather-city");
-
-    if (!cityElement) {
-        console.log(`The chosen city is ${city}`);
-        return;
-    }
-
-    cityElement.textContent = city;
-}
+let cityDropdown;
 
 async function getWeatherData() {
     const weatherData = JSON.parse(localStorage.getItem("weatherData"));
@@ -83,11 +77,7 @@ function setSunset(sunsetTime) {
     sunset.textContent = `${sunsetTime}`;
 }
 
-async function init() {
-    const weatherData = await getWeatherData();
-    console.log(`weather data: ${JSON.stringify(weatherData)}`);
-    console.log(typeof weatherData);
-
+function setComponentsValue(weatherData) {
     setLocationLabel(weatherData.city_name);
     setTemperature(weatherData.current.temperature);
     setWeatherState(weatherData.current.state);
@@ -96,6 +86,23 @@ async function init() {
     setUV(weatherData.current.uv);
     setSunrise(weatherData.current.sunrise);
     setSunset(weatherData.current.sunset);
+}
+
+async function init() {
+    const weatherData = await getWeatherData();
+    console.log(`weather data: ${JSON.stringify(weatherData)}`);
+
+    setComponentsValue(weatherData);
+
+    initializeELements({
+            input: input,
+            searchForm: inputContainer,
+            cityDropdown: cityDropdown
+        });
+
+    input.addEventListener("input",(event) => {
+        handleInput(event.target.value);
+    });
 }
 
 await init();
