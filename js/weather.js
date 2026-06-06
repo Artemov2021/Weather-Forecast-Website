@@ -31,10 +31,22 @@ function setTemperature(temperatureValue) {
     temperature.textContent = `${temperatureValue}°`;
 }
 
-function setWeatherState(stateValue) {
+function setWeatherState(stateValue,temperatureValue) {
     state.textContent = `${stateValue}`;
+    setAppropriateStatePadding(temperatureValue);
 
     setAppropriateSymbol(stateValue);
+}
+
+function setAppropriateStatePadding(temperatureValue) {
+    if (temperatureValue < 10) {
+        state.style.paddingRight = "0px";
+        temperature.style.paddingLeft = "33px";
+    } else if (temperatureValue < 20) {
+        state.style.paddingRight = "24px";
+    } else {
+        state.style.paddingRight = "32px";
+    }  
 }
 
 function setAppropriateSymbol(stateValue) {
@@ -80,7 +92,7 @@ function setSunset(sunsetTime) {
 function setComponentsValue(weatherData) {
     setLocationLabel(weatherData.city_name);
     setTemperature(weatherData.current.temperature);
-    setWeatherState(weatherData.current.state);
+    setWeatherState(weatherData.current.state,weatherData.current.temperature);
     setHumidity(weatherData.current.humidity);
     setAirQuality(weatherData.current.air_quality);
     setUV(weatherData.current.uv);
