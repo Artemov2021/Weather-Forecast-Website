@@ -89,6 +89,15 @@ function setSunset(sunsetTime) {
     sunset.textContent = `${sunsetTime}`;
 }
 
+function setHourlyDashboardTitles(weatherData) {
+    const hourlyData = weatherData.hourly;
+
+    for (let i = 0;i < hourlyData.length;i++) {
+        const title = document.querySelector(`#hour${i+1}`);
+        title.textContent = hourlyData[i].time;
+    }
+}
+
 function setComponentsValue(weatherData) {
     setLocationLabel(weatherData.city_name);
     setTemperature(weatherData.current.temperature);
@@ -98,6 +107,8 @@ function setComponentsValue(weatherData) {
     setUV(weatherData.current.uv);
     setSunrise(weatherData.current.sunrise);
     setSunset(weatherData.current.sunset);
+
+    setHourlyDashboardTitles(weatherData);
 }
 
 async function init() {

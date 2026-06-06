@@ -56,14 +56,16 @@ async function getFilteredData(data,city) {
     You are a professional helpful assistant. Convert the giving JSON into the following format. Response only in JSON. Dont reply 
     with quotes at the beginning. You can choose only between the following states: sunny, rainy, cloudy, night, snowy
     Humidity value represents percentage. Air quality can be only either low, medium or good. UV can be either low, medium or high
+    For hourly forecast, provide the next 6 hours of data. Now is ${getCurrentTime()}, therefore beginn from the next full hour.
     For daily forecast, provide the weekday (Monday, Tuesday, etc), day temperature (max), night temperature (min), and weather state.
     City is called ${city}
     Example:
 
     {
-       "city_name": "London",
+        "city_name": "London",
         "current": {
             "temperature": 23,
+            "night_temp": 8,
             "state": "sunny",
             "humidity": 34,
             "air_quality": "Medium",
@@ -100,6 +102,13 @@ async function getFilteredData(data,city) {
     });
 
     return JSON.parse(response.output_text);
+}
+
+function getCurrentTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
 }
 
 async function getMatchedCities(query) {
