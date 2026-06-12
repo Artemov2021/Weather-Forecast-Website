@@ -11,6 +11,7 @@ const airQuality = document.querySelector("#air-quality");
 const uv = document.querySelector("#uv");
 const sunrise = document.querySelector("#sunrise");
 const sunset = document.querySelector("#sunset");
+const temperatureLineContainer = document.querySelector(".temperature-line-container");
 
 let cityDropdown;
 
@@ -93,10 +94,63 @@ function setHourlyDashboardTitles(weatherData) {
     const hourlyData = weatherData.hourly;
 
     for (let i = 0;i < hourlyData.length;i++) {
-        const title = document.querySelector(`#hour${i+1}`);
+        const title = document.querySelector(`#hour-${i+1}`);
         title.textContent = hourlyData[i].time;
     }
 }
+
+function setHourlyDashboardLine(weatherData) {
+    const hourlyTemperature = weatherData.hourly.map(hourlyData => (hourlyData.temperature));
+    hourlyTemperature.unshift(weatherData.current.temperature);
+
+    const topPadding = 20;
+    const bottomPadding = 45;
+    const lineContainerHeight = temperatureLineContainer.offsetHeight - bottomPadding;
+    const lowestTemperature = Math.min(...hourlyTemperature);
+    const highestTemperature = Math.max(...hourlyTemperature);
+    let oneGradInPx = 10;
+
+    const isGraphTooHigh = (lineContainerHeight - ((highestTemperature - lowestTemperature) * oneGradInPx)) < topPadding;
+
+    for (let i = 0;i < hourlyTemperature.length - 1;i++) {
+        const isLastTemperature = (i === hourlyTemperature.length - 2);
+
+        if (isGraphTooHigh) {
+            oneGradInPx = lineContainerHeight / (highestTemperature - lowestTemperature);
+        }
+
+  
+        const line = document.querySelector(`#hour-line-${i + 1}`);
+        const x1 = line.getAttribute("x1");
+        const x2 = line.getAttribute("x2");
+
+        const y1 = lineContainerHeight - ((hourlyTemperature[i] - lowestTemperature) * oneGradInPx);
+        const y2 = lineContainerHeight - ((hourlyTemperature[i + 1] - lowestTemperature) * oneGradInPx);
+
+        line.setAttribute("y1", y1 < topPadding ? topPadding : y1);
+        line.setAttribute("y2", y2 < topPadding ? topPadding : y2);
+
+        addTemperatureLabel(hourlyTemperature[i],x1,y1)
+   
+        if (isLastTemperature) {
+            const lastLabelXPosition = x2 - 30;
+            addTemperatureLabel(hourlyTemperature[i+1], lastLabelXPosition, y2);
+        }
+    }
+}
+
+function addTemperatureLabel(temperatureValue,x,y) {
+    const temperatureLabel = document.createElement("p");
+    temperatureLabel.className = "temperature-label";
+    temperatureLabel.innerText = temperatureValue + "°";
+    const temperatureLabelTopMargin = 9;
+    temperatureLabel.style.top = `${y+temperatureLabelTopMargin}px`;
+    temperatureLabel.style.left = `${x}px`;
+    temperatureLineContainer.append(temperatureLabel);
+}
+
+    
+
 
 function setComponentsValue(weatherData) {
     setLocationLabel(weatherData.city_name);
@@ -109,11 +163,12 @@ function setComponentsValue(weatherData) {
     setSunset(weatherData.current.sunset);
 
     setHourlyDashboardTitles(weatherData);
+    setHourlyDashboardLine(weatherData);
 }
 
 async function init() {
     const weatherData = await getWeatherData();
-    console.log(`weather data: ${JSON.stringify(weatherData)}`);
+    console.log(`weather data: ${JSON.stringify(weatherData.hourly)}`);
 
     setComponentsValue(weatherData);
 

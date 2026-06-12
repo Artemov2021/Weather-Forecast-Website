@@ -72,27 +72,27 @@
         <div class="weather-forecast-container" style="animation: fadeLeft 0.85s ease 0.4s forwards">
             <div class="timeline-container">
                 <p class="dashboard-title-highlighted">Now</p>
-                <p id="hour1" class="dashboard-title-default">13:00</p>
-                <p id="hour2" class="dashboard-title-default">14:00</p>
-                <p id="hour3" class="dashboard-title-default">15:00</p>
-                <p id="hour4" class="dashboard-title-default">16:00</p>
-                <p id="hour5" class="dashboard-title-default">17:00</p>
-                <p id="hour6" class="dashboard-title-default">18:00</p>
+                <p id="hour-1" class="dashboard-title-default">13:00</p>
+                <p id="hour-2" class="dashboard-title-default">14:00</p>
+                <p id="hour-3" class="dashboard-title-default">15:00</p>
+                <p id="hour-4" class="dashboard-title-default">16:00</p>
+                <p id="hour-5" class="dashboard-title-default">17:00</p>
+                <p id="hour-6" class="dashboard-title-default">18:00</p>
             </div>
-            <div class="temperature-line-container"> <svg viewBox="0 0 748 150">
+            <div class="temperature-line-container"> <svg viewBox="0 0 748 200">
                     <defs>
                         <linearGradient id="redToYellow" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" style="stop-color:#f77123;stop-opacity:1" />
                             <stop offset="100%" style="stop-color:#f5c66d;stop-opacity:1" />
                         </linearGradient>
                     </defs>
-                    <line x1="4" y1="2" x2="133" y2="75" stroke="url(#redToYellow)" stroke-width="4" stroke-linecap="round"
+                    <line id="hour-line-1" x1="4" y1="2" x2="133" y2="75" class="temperature-line" stroke="url(#redToYellow)" stroke-width="4" stroke-linecap="round"
                         stroke-linejoin="round" />
-                    <line x1="133" y1="75" x2="252" y2="25" class="temperature-line" />
-                    <line x1="252" y1="25" x2="372" y2="90" class="temperature-line" />
-                    <line x1="372" y1="90" x2="492" y2="35" class="temperature-line" />
-                    <line x1="492" y1="35" x2="610.5" y2="50" class="temperature-line" />
-                    <line x1="610.5" y1="50" x2="745" y2="17" class="temperature-line" />
+                    <line id="hour-line-2" x1="133" y1="75" x2="252" y2="25" class="temperature-line" />
+                    <line id="hour-line-3" x1="252" y1="25" x2="372" y2="90" class="temperature-line" />
+                    <line id="hour-line-4" x1="372" y1="90" x2="492" y2="35" class="temperature-line" />
+                    <line id="hour-line-5" x1="492" y1="35" x2="610.5" y2="50" class="temperature-line" />
+                    <line id="hour-line-6" x1="610.5" y1="50" x2="745" y2="17" class="temperature-line" />
                 </svg>
             </div>
             <div class="status-symbols-container">

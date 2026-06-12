@@ -224,8 +224,8 @@ body {
 .weather-forecast-container {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    width: 100%;
+    gap: 45px;
+    width: fit-content;
     box-sizing: border-box;
     background-color: rgba(255,255,255,0.13);
     border: 0.10px solid rgba(255, 255, 255, 0.507);
@@ -239,7 +239,7 @@ body {
 .timeline-container {
     display: flex;
     justify-content: space-between;
-}
+}    
 
 .dashboard-title-default {
     font-size: 18px;
@@ -254,7 +254,10 @@ body {
 }
 
 .temperature-line-container {
-    height: 150px;
+    position: relative;
+    width: fit-content;
+    height: 200px;
+    background-color: rgba(255,255,255,0);
 }
 
 .status-symbols-container {
@@ -282,5 +285,12 @@ svg {
     stroke-width: 4;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+.temperature-label {
+    position: absolute;
+    font-size: 16px;
+    color: rgba(255,255,255,1);
+    font-weight: 700;
 }
 
