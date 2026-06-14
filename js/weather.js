@@ -14,32 +14,35 @@ const sunset = document.querySelector("#sunset");
 const temperatureLineContainer = document.querySelector(".temperature-line-container");
 
 let cityDropdown;
+let weatherData;
 
 async function getWeatherData() {
     const weatherData = JSON.parse(localStorage.getItem("weatherData"));
     return weatherData;
 }
 
-function setLocationLabel(city) {
-    location.textContent = city;
+function setLocationLabel() {
+    location.textContent = weatherData.city_name;
 
     const currentPadding = parseInt(window.getComputedStyle(input).paddingLeft);
     const locationLabelWidth = location.offsetWidth;
     input.style.paddingLeft = (currentPadding + locationLabelWidth) + "px";
 }
 
-function setTemperature(temperatureValue) {
-    temperature.textContent = `${temperatureValue}°`;
+function setTemperature() {
+    temperature.textContent = `${weatherData.current.temperature}°`;
 }
 
-function setWeatherState(stateValue,temperatureValue) {
-    state.textContent = `${stateValue}`;
-    setAppropriateStatePadding(temperatureValue);
+function setWeatherState() {
+    state.textContent = `${weatherData.current.state}`;
 
-    setAppropriateSymbol(stateValue);
+    setAppropriateStatePadding();
+    setAppropriateSymbol();
 }
 
-function setAppropriateStatePadding(temperatureValue) {
+function setAppropriateStatePadding() {
+    const temperatureValue = weatherData.current.temperature;
+
     if (temperatureValue < 10) {
         state.style.paddingRight = "0px";
         temperature.style.paddingLeft = "33px";
@@ -50,8 +53,10 @@ function setAppropriateStatePadding(temperatureValue) {
     }  
 }
 
-function setAppropriateSymbol(stateValue) {
-    switch (stateValue.toLowerCase()) {
+function setAppropriateSymbol() {
+    const state = weatherData.current.state;
+
+    switch (state.toLowerCase()) {
         case "sunny":
             stateSymbol.src = "assets/images/sunny-state.png";
             break;
@@ -70,27 +75,31 @@ function setAppropriateSymbol(stateValue) {
     }
 }
 
-function setHumidity(humidityValue) {
-    humidity.textContent = `${humidityValue}%`;
+function setHumidity() {
+    humidity.textContent = `${weatherData.current.humidity}%`;
 }
 
-function setAirQuality(airQualityValue) {
+function setAirQuality() {
+    const airQualityValue = weatherData.current.air_quality;
     airQuality.textContent = `${airQualityValue[0].toUpperCase() + airQualityValue.slice(1)}`;
 }
 
-function setUV(uvValue) {
+function setUV() {
+    const uvValue = weatherData.current.uv;
     uv.textContent = `${uvValue[0].toUpperCase() + uvValue.slice(1)}`;
 }
 
-function setSunrise(sunriseTime) {
+function setSunrise() {
+    const sunriseTime = weatherData.current.sunrise;
     sunrise.textContent = `${sunriseTime}`;
 }
 
-function setSunset(sunsetTime) {
+function setSunset() {
+    const sunsetTime = weatherData.current.sunset;
     sunset.textContent = `${sunsetTime}`;
 }
 
-function setHourlyDashboardTitles(weatherData) {
+function setHourlyDashboardTitles() {
     const hourlyData = weatherData.hourly;
 
     for (let i = 0;i < hourlyData.length;i++) {
@@ -99,7 +108,7 @@ function setHourlyDashboardTitles(weatherData) {
     }
 }
 
-function setHourlyDashboardLine(weatherData) {
+function setHourlyDashboardLine() {
     const hourlyTemperature = weatherData.hourly.map(hourlyData => (hourlyData.temperature));
     hourlyTemperature.unshift(weatherData.current.temperature);
 
@@ -149,7 +158,7 @@ function addTemperatureLabel(temperatureValue,x,y) {
     temperatureLineContainer.append(temperatureLabel);
 }
 
-function setHourlyDashboardSymbols(weatherData) {
+function setHourlyDashboardSymbols() {
     const hourlyStates = weatherData.hourly.map(hourlyData => (hourlyData.state));
     hourlyStates.unshift(weatherData.current.state);
 
@@ -162,32 +171,32 @@ function setHourlyDashboardSymbols(weatherData) {
     
 
 
-function setComponentsValue(weatherData) {
-    setLocationLabel(weatherData.city_name);
-    setTemperature(weatherData.current.temperature);
-    setWeatherState(weatherData.current.state,weatherData.current.temperature);
-    setHumidity(weatherData.current.humidity);
-    setAirQuality(weatherData.current.air_quality);
-    setUV(weatherData.current.uv);
-    setSunrise(weatherData.current.sunrise);
-    setSunset(weatherData.current.sunset);
+function setComponentsValue() {
+    setLocationLabel();
+    setTemperature();
+    setWeatherState();
+    setHumidity();
+    setAirQuality();
+    setUV();
+    setSunrise();
+    setSunset();
     
-    setHourlyDashboardTitles(weatherData);
-    setHourlyDashboardLine(weatherData);
-    setHourlyDashboardSymbols(weatherData);
+    setHourlyDashboardTitles();
+    setHourlyDashboardLine();
+    setHourlyDashboardSymbols();
 }
 
 async function init() {
-    const weatherData = await getWeatherData();
+    weatherData = await getWeatherData();
     console.log(`weather data: ${JSON.stringify(weatherData.hourly)}`);
 
-    setComponentsValue(weatherData);
+    setComponentsValue();
 
     initializeELements({
-            input: input,
-            searchForm: inputContainer,
-            cityDropdown: cityDropdown
-        });
+        input: input,
+        searchForm: inputContainer,
+        cityDropdown: cityDropdown
+    });
 
     input.addEventListener("input",(event) => {
         handleInput(event.target.value);
