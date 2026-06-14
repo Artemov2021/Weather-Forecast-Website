@@ -149,6 +149,16 @@ function addTemperatureLabel(temperatureValue,x,y) {
     temperatureLineContainer.append(temperatureLabel);
 }
 
+function setHourlyDashboardSymbols(weatherData) {
+    const hourlyStates = weatherData.hourly.map(hourlyData => (hourlyData.state));
+    hourlyStates.unshift(weatherData.current.state);
+
+    for (let i = 0;i < hourlyStates.length;i++) {
+        const stateSymbol = document.querySelector(`#hourly-state-${i+1}`);
+        stateSymbol.src = `assets/images/${hourlyStates[i]}.png`;
+    }
+}
+
     
 
 
@@ -161,9 +171,10 @@ function setComponentsValue(weatherData) {
     setUV(weatherData.current.uv);
     setSunrise(weatherData.current.sunrise);
     setSunset(weatherData.current.sunset);
-
+    
     setHourlyDashboardTitles(weatherData);
     setHourlyDashboardLine(weatherData);
+    setHourlyDashboardSymbols(weatherData);
 }
 
 async function init() {
