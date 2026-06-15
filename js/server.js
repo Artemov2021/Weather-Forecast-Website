@@ -56,8 +56,8 @@ async function getFilteredData(data,city) {
     You are a professional helpful assistant. Convert the giving JSON into the following format. Response only in JSON. Dont reply 
     with quotes at the beginning. You can choose only between the following states: sunny, rainy, cloudy, night, snowy
     Humidity value represents percentage. Air quality can be only either low, medium or good. UV can be either low, medium or high
-    For hourly forecast, provide the next 6 hours of data. Now is ${getCurrentTime()}, therefore beginn from the next full hour.
-    For daily forecast, provide the weekday (Monday, Tuesday, etc), day temperature (max), night temperature (min), and weather state.
+    For hourly forecast, provide the next 6 hours of data. Now is ${getCurrentDay()} ${getCurrentTime()}, therefore beginn from the next full hour.
+    For daily forecast, provide next 4 weekdays (excluding today), day temperature (max), night temperature (min), and weather state.
     City is called ${city}
     Example:
 
@@ -65,8 +65,10 @@ async function getFilteredData(data,city) {
         "city_name": "London",
         "current": {
             "temperature": 23,
+            "day_temp": 21,
             "night_temp": 8,
             "state": "sunny",
+            "day_state": "cloudy",
             "humidity": 34,
             "air_quality": "Medium",
             "uv": "low",
@@ -83,7 +85,7 @@ async function getFilteredData(data,city) {
         ],
         "daily": [
             {
-                "weekday": "Monday",
+                "weekday": "Mon",
                 "day_temp": 25,
                 "night_temp": 18,
                 "state": "sunny"
@@ -109,6 +111,13 @@ function getCurrentTime() {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
+}
+
+function getCurrentDay() {
+    const weekdayName = new Date().toLocaleDateString("en-US", {
+        weekday: "long"
+    });
+    return weekdayName;
 }
 
 async function getMatchedCities(query) {
