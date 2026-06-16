@@ -79,15 +79,8 @@
                 <p id="hour-title-5" class="dashboard-title-default">17:00</p>
                 <p id="hour-title-6" class="dashboard-title-default">18:00</p>
             </div>
-            <div class="temperature-line-container"> <svg viewBox="0 0 748 200">
-                    <defs>
-                        <linearGradient id="redToYellow" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#f77123;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#f5c66d;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <line id="hour-line-1" x1="4" y1="2" x2="133" y2="75" class="temperature-line" stroke="url(#redToYellow)" stroke-width="4" stroke-linecap="round"
-                        stroke-linejoin="round" />
+            <div id="hourly-temperature-line-container" class="hourly-temperature-line-container"> <svg viewBox="0 0 748 200">
+                    <line id="hour-line-1" x1="4" y1="2" x2="133" y2="75" class="temperature-line" />
                     <line id="hour-line-2" x1="133" y1="75" x2="252" y2="25" class="temperature-line" />
                     <line id="hour-line-3" x1="252" y1="25" x2="372" y2="90" class="temperature-line" />
                     <line id="hour-line-4" x1="372" y1="90" x2="492" y2="35" class="temperature-line" />
@@ -114,18 +107,11 @@
                 <p id="daily-title-4" class="dashboard-title-default">Wed</p>
                 <p id="daily-title-5" class="dashboard-title-default">Thu</p>
             </div>
-                <div class="temperature-line-container"> <svg viewBox="0 0 748 200">
-                    <defs>
-                        <linearGradient id="redToYellow" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#f77123;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#f5c66d;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <line x1="4" y1="2" x2="210" y2="75" stroke="url(#redToYellow)" stroke-width="4" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <line x1="210" y1="75" x2="385" y2="25" class="temperature-line" />
-                    <line x1="385" y1="25" x2="558" y2="90" class="temperature-line" />
-                    <line x1="558" y1="90" x2="745" y2="17" class="temperature-line" />
+                <div id="daily-temperature-line-container" class="daily-temperature-line-container"> <svg viewBox="0 0 748 300">
+                    <line id="day-line-1" x1="4" y1="2" x2="210" y2="75" class="temperature-line" />
+                    <line id="day-line-2" x1="210" y1="75" x2="385" y2="25" class="temperature-line" />
+                    <line id="day-line-3" x1="385" y1="25" x2="558" y2="90" class="temperature-line" />
+                    <line id="day-line-4" x1="558" y1="90" x2="745" y2="17" class="temperature-line" />
                 </svg>
                 </div>
             <div class="status-symbols-container">

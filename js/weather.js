@@ -159,6 +159,16 @@ function addHourlyTemperatureLabel(temperatureValue,x,y) {
     hourlyTemperatureLineContainer.append(temperatureLabel);
 }
 
+function addDailyTemperatureLabel(temperatureValue,x,y) {
+    const temperatureLabel = document.createElement("p");
+    temperatureLabel.className = "temperature-label";
+    temperatureLabel.innerText = temperatureValue + "°";
+    const temperatureLabelTopMargin = -25;
+    temperatureLabel.style.top = `${y+temperatureLabelTopMargin}px`;
+    temperatureLabel.style.left = `${x}px`;
+    dailyTemperatureLineContainer.append(temperatureLabel);
+}
+
 function setHourlyDashboardSymbols() {
     const hourlyStates = weatherData.hourly.map(hourlyData => (hourlyData.state));
     hourlyStates.unshift(weatherData.current.state);
@@ -196,14 +206,40 @@ function setDailyDashboardDayLine() {
     const dayTemperatureValues = dailyData.map(dailyData => dailyData.day_temp);
     console.log(dayTemperatureValues);
 
-    const topPadding = 20;
-    const bottomPadding = dailyTemperatureLineContainer.offsetHeight / 2;
-    /* const lineContainerHeight = dailyTemperatureLineContainer.offsetHeight - bottomPadding;
-    const lowestTemperature = Math.min(...hourlyTemperature);
-    const highestTemperature = Math.max(...hourlyTemperature);
+    const dayTopPadding = 20;
+    const dayBottomPadding = dailyTemperatureLineContainer.offsetHeight / 2;
+    const dayLineContainerHeight = dailyTemperatureLineContainer.offsetHeight - dayBottomPadding;
+    const dayLowestTemperature = Math.min(...dayTemperatureValues);
+    const dayHighestTemperature = Math.max(...dayTemperatureValues);
     let oneGradInPx = 10;
 
-    const isGraphTooHigh = (lineContainerHeight - ((highestTemperature - lowestTemperature) * oneGradInPx)) < topPadding; */
+    const isGraphTooHigh = (dayLineContainerHeight - ((dayHighestTemperature - dayLowestTemperature) * oneGradInPx)) < dayTopPadding;
+
+    for (let i = 0;i < dayTemperatureValues.length - 1;i++) {
+        const isLastTemperature = (i === dayTemperatureValues.length - 2);
+
+        if (isGraphTooHigh) {
+            oneGradInPx = dayLineContainerHeight / (dayHighestTemperature - dayLowestTemperature);
+        }
+
+  
+        const line = document.querySelector(`#day-line-${i + 1}`);
+        const x1 = line.getAttribute("x1");
+        const x2 = line.getAttribute("x2");
+
+        const y1 = dayLineContainerHeight - ((dayTemperatureValues[i] - dayLowestTemperature) * oneGradInPx);
+        const y2 = dayLineContainerHeight - ((dayTemperatureValues[i + 1] - dayLowestTemperature) * oneGradInPx);
+
+        line.setAttribute("y1", y1 < dayTopPadding ? dayTopPadding : y1);
+        line.setAttribute("y2", y2 < dayTopPadding ? dayTopPadding : y2);
+
+        addDailyTemperatureLabel(dayTemperatureValues[i],x1,y1)
+   
+        if (isLastTemperature) {
+            const lastLabelXPosition = x2 - 15;
+            addDailyTemperatureLabel(dayTemperatureValues[i+1], lastLabelXPosition, y2);
+        }
+    }
 }
 
     
