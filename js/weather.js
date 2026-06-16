@@ -11,7 +11,8 @@ const airQuality = document.querySelector("#air-quality");
 const uv = document.querySelector("#uv");
 const sunrise = document.querySelector("#sunrise");
 const sunset = document.querySelector("#sunset");
-const temperatureLineContainer = document.querySelector(".temperature-line-container");
+const hourlyTemperatureLineContainer = document.querySelector("#hourly-temperature-line-container");
+const dailyTemperatureLineContainer = document.querySelector("#daily-temperature-line-container");
 
 let cityDropdown;
 let weatherData;
@@ -114,7 +115,7 @@ function setHourlyDashboardLine() {
 
     const topPadding = 20;
     const bottomPadding = 45;
-    const lineContainerHeight = temperatureLineContainer.offsetHeight - bottomPadding;
+    const lineContainerHeight = hourlyTemperatureLineContainer.offsetHeight - bottomPadding;
     const lowestTemperature = Math.min(...hourlyTemperature);
     const highestTemperature = Math.max(...hourlyTemperature);
     let oneGradInPx = 10;
@@ -139,23 +140,23 @@ function setHourlyDashboardLine() {
         line.setAttribute("y1", y1 < topPadding ? topPadding : y1);
         line.setAttribute("y2", y2 < topPadding ? topPadding : y2);
 
-        addTemperatureLabel(hourlyTemperature[i],x1,y1)
+        addHourlyTemperatureLabel(hourlyTemperature[i],x1,y1)
    
         if (isLastTemperature) {
-            const lastLabelXPosition = x2 - 30;
-            addTemperatureLabel(hourlyTemperature[i+1], lastLabelXPosition, y2);
+            const lastLabelXPosition = x2 - 15;
+            addHourlyTemperatureLabel(hourlyTemperature[i+1], lastLabelXPosition, y2);
         }
     }
 }
 
-function addTemperatureLabel(temperatureValue,x,y) {
+function addHourlyTemperatureLabel(temperatureValue,x,y) {
     const temperatureLabel = document.createElement("p");
     temperatureLabel.className = "temperature-label";
     temperatureLabel.innerText = temperatureValue + "°";
     const temperatureLabelTopMargin = 9;
     temperatureLabel.style.top = `${y+temperatureLabelTopMargin}px`;
     temperatureLabel.style.left = `${x}px`;
-    temperatureLineContainer.append(temperatureLabel);
+    hourlyTemperatureLineContainer.append(temperatureLabel);
 }
 
 function setHourlyDashboardSymbols() {
@@ -176,15 +177,33 @@ function setDailyDashboardTitles() {
         "night_temp": weatherData.current.night_temp,
         "state": weatherData.current.day_state
     }
-
     const dailyData = [todayData,...weatherData.daily];
-    console.log(dailyData);
 
     for (let i = 0; i < dailyData.length; i++) {
         const title = document.querySelector(`#daily-title-${i + 1}`);
         title.textContent = dailyData[i].weekday;
-
     }
+}
+
+function setDailyDashboardDayLine() {
+     const todayData = {
+        "weekday": "Today",
+        "day_temp": weatherData.current.day_temp,
+        "night_temp": weatherData.current.night_temp,
+        "state": weatherData.current.day_state
+    }
+    const dailyData = [todayData,...weatherData.daily];
+    const dayTemperatureValues = dailyData.map(dailyData => dailyData.day_temp);
+    console.log(dayTemperatureValues);
+
+    const topPadding = 20;
+    const bottomPadding = dailyTemperatureLineContainer.offsetHeight / 2;
+    /* const lineContainerHeight = dailyTemperatureLineContainer.offsetHeight - bottomPadding;
+    const lowestTemperature = Math.min(...hourlyTemperature);
+    const highestTemperature = Math.max(...hourlyTemperature);
+    let oneGradInPx = 10;
+
+    const isGraphTooHigh = (lineContainerHeight - ((highestTemperature - lowestTemperature) * oneGradInPx)) < topPadding; */
 }
 
     
@@ -205,6 +224,7 @@ function setComponentsValue() {
     setHourlyDashboardSymbols();
 
     setDailyDashboardTitles();
+    setDailyDashboardDayLine();
 }
 
 async function init() {

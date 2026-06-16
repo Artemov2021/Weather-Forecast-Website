@@ -225,7 +225,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 45px;
-    width: fit-content;
+    width: 100%;
     box-sizing: border-box;
     background-color: rgba(255,255,255,0.13);
     border: 0.10px solid rgba(255, 255, 255, 0.507);
@@ -253,10 +253,18 @@ body {
     font-weight: 600;
 }
 
-.temperature-line-container {
+.hourly-temperature-line-container {
     position: relative;
     width: fit-content;
     height: 200px;
+    width: 100%;
+    background-color: rgba(255,255,255,0);
+}
+
+.daily-temperature-line-container {
+    position: relative;
+    width: fit-content;
+    height: 300px;
     background-color: rgba(255,255,255,0);
 }
 
