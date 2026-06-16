@@ -44,7 +44,7 @@ async function getWeatherData(lat,lng,cityName) {
 
     const rawData = {
         current: data.current,
-        hourly: data.hourly.slice(0, 6),
+        hourly: data.hourly.slice(0, 20),
         daily: data.daily.slice(0, 5)
     };
 
@@ -56,8 +56,9 @@ async function getFilteredData(data,city) {
     You are a professional helpful assistant. Convert the giving JSON into the following format. Response only in JSON. Dont reply 
     with quotes at the beginning. You can choose only between the following states: sunny, rainy, cloudy, night, snowy
     Humidity value represents percentage. Air quality can be only either low, medium or good. UV can be either low, medium or high
-    For hourly forecast, provide the next 6 hours of data. Now is ${getCurrentDay()} ${getCurrentTime()}, therefore beginn from the next full hour.
-    For daily forecast, provide next 4 weekdays (excluding today), day temperature (max), night temperature (min), and weather state.
+    For hourly forecast, provide the next 6 hours of data. Now is ${getCurrentDay()} ${getCurrentTime()}, therefore convert current time into local time and 
+    beginn from the next full hour. For daily forecast, provide next 4 weekdays (excluding today), day temperature (max), night temperature (min), 
+    and weather state.
     City is called ${city}
     Example:
 

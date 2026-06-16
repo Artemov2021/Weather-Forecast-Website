@@ -159,11 +159,21 @@ function addHourlyTemperatureLabel(temperatureValue,x,y) {
     hourlyTemperatureLineContainer.append(temperatureLabel);
 }
 
-function addDailyTemperatureLabel(temperatureValue,x,y) {
+function addDailyDayTemperatureLabel(temperatureValue,x,y) {
     const temperatureLabel = document.createElement("p");
     temperatureLabel.className = "temperature-label";
     temperatureLabel.innerText = temperatureValue + "°";
     const temperatureLabelTopMargin = -25;
+    temperatureLabel.style.top = `${y+temperatureLabelTopMargin}px`;
+    temperatureLabel.style.left = `${x}px`;
+    dailyTemperatureLineContainer.append(temperatureLabel);
+}
+
+function addDailyNightTemperatureLabel(temperatureValue,x,y) {
+    const temperatureLabel = document.createElement("p");
+    temperatureLabel.className = "temperature-label";
+    temperatureLabel.innerText = temperatureValue + "°";
+    const temperatureLabelTopMargin = 15;
     temperatureLabel.style.top = `${y+temperatureLabelTopMargin}px`;
     temperatureLabel.style.left = `${x}px`;
     dailyTemperatureLineContainer.append(temperatureLabel);
@@ -196,7 +206,7 @@ function setDailyDashboardTitles() {
 }
 
 function setDailyDashboardDayLine() {
-     const todayData = {
+    const todayData = {
         "weekday": "Today",
         "day_temp": weatherData.current.day_temp,
         "night_temp": weatherData.current.night_temp,
@@ -204,7 +214,6 @@ function setDailyDashboardDayLine() {
     }
     const dailyData = [todayData,...weatherData.daily];
     const dayTemperatureValues = dailyData.map(dailyData => dailyData.day_temp);
-    console.log(dayTemperatureValues);
 
     const dayTopPadding = 20;
     const dayBottomPadding = dailyTemperatureLineContainer.offsetHeight / 2;
@@ -233,15 +242,63 @@ function setDailyDashboardDayLine() {
         line.setAttribute("y1", y1 < dayTopPadding ? dayTopPadding : y1);
         line.setAttribute("y2", y2 < dayTopPadding ? dayTopPadding : y2);
 
-        addDailyTemperatureLabel(dayTemperatureValues[i],x1,y1)
+        addDailyDayTemperatureLabel(dayTemperatureValues[i],x1,y1)
    
         if (isLastTemperature) {
             const lastLabelXPosition = x2 - 15;
-            addDailyTemperatureLabel(dayTemperatureValues[i+1], lastLabelXPosition, y2);
+            addDailyDayTemperatureLabel(dayTemperatureValues[i+1], lastLabelXPosition, y2);
         }
     }
 }
 
+function setDailyDashboardNightLine() {
+    const todayData = {
+        "weekday": "Today",
+        "day_temp": weatherData.current.day_temp,
+        "night_temp": weatherData.current.night_temp,
+        "state": weatherData.current.day_state
+    }
+
+    const dailyData = [todayData, ...weatherData.daily];
+    const nightTemperatureValues = dailyData.map(dailyData => dailyData.night_temp);
+
+    const svgContainerHeight = dailyTemperatureLineContainer.offsetHeight;
+    const nightTopPadding = svgContainerHeight / 2;
+    const nightBottomPadding = 35;
+    const nightLineContainerHeight = svgContainerHeight - nightTopPadding;
+    const nightLowestTemperature = Math.min(...nightTemperatureValues);
+    const nightHighestTemperature = Math.max(...nightTemperatureValues);
+    let oneGradInPx = 10;
+
+    const isGraphTooHigh = (nightLineContainerHeight - ((nightHighestTemperature - nightLowestTemperature) * oneGradInPx)) < 0;
+
+    for (let i = 0;i < nightTemperatureValues.length - 1;i++) {
+        const isLastTemperature = (i === nightTemperatureValues.length - 2);
+
+        if (isGraphTooHigh) {
+            oneGradInPx = nightLineContainerHeight / (nightHighestTemperature - nightLowestTemperature);
+        }
+
+  
+        const line = document.querySelector(`#night-line-${i + 1}`);
+        const x1 = line.getAttribute("x1");
+        const x2 = line.getAttribute("x2");
+
+        const y1 = (svgContainerHeight - ((nightTemperatureValues[i] - nightLowestTemperature) * oneGradInPx)) - nightBottomPadding;
+        const y2 = (svgContainerHeight - ((nightTemperatureValues[i + 1] - nightLowestTemperature) * oneGradInPx)) - nightBottomPadding;
+
+
+        line.setAttribute("y1",y1);
+        line.setAttribute("y2",y2);
+
+        addDailyNightTemperatureLabel(nightTemperatureValues[i],x1,y1)
+   
+        if (isLastTemperature) {
+            const lastLabelXPosition = x2 - 15;
+            addDailyNightTemperatureLabel(nightTemperatureValues[i+1], lastLabelXPosition, y2);
+        }
+    }
+}
     
 
 
@@ -261,6 +318,7 @@ function setComponentsValue() {
 
     setDailyDashboardTitles();
     setDailyDashboardDayLine();
+    setDailyDashboardNightLine();
 }
 
 async function init() {
