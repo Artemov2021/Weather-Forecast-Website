@@ -48,18 +48,34 @@ async function getWeatherData(lat,lng,cityName) {
         daily: data.daily.slice(0, 5)
     };
 
-    return await getFilteredData(rawData,cityName);
+    return await getFilteredData(rawData,cityName,lat,lng);
 }
 
-async function getFilteredData(data,city) {
+async function getFilteredData(data,city,lat,lng) {
     const prompt = `
     You are a professional helpful assistant. Convert the giving JSON into the following format. Response only in JSON. Dont reply 
-    with quotes at the beginning. You can choose only between the following states: sunny, rainy, cloudy, night, snowy
-    Humidity value represents percentage. Air quality can be only either low, medium or good. UV can be either low, medium or high
-    For hourly forecast, provide the next 6 hours of data. Now is ${getCurrentDay()} ${getCurrentTime()}, therefore convert current time into local time and 
-    beginn from the next full hour. For daily forecast, provide next 4 weekdays (excluding today), day temperature (max), night temperature (min), 
-    and weather state.
-    City is called ${city}
+    with quotes at the beginning. 
+    
+    Rules:
+    - Weather state must be exactly one of: sunny, rainy, cloudy, night, snowy
+    - Humidity = percentage number only
+    - Air quality must be: low, medium, or good
+    - UV must be: low, medium, or high
+    - Current time in that city is: ${await getCurrentCityTime(lat,lng)}
+    - City is: ${city}
+
+    Hourly forecast:
+    - Return next 6 hours
+    - Start from next full hour in CITY local time
+
+    Daily forecast:
+    - Return next 4 weekdays excluding today
+    - Include:
+        - weekday
+        - day temperature (max)
+        - night temperature (min)
+        - weather state
+
     Example:
 
     {
@@ -105,6 +121,24 @@ async function getFilteredData(data,city) {
     });
 
     return JSON.parse(response.output_text);
+}
+
+async function getCurrentCityTime(lat,lng) {
+    const timeZone = await getCityTimeZone(lat,lng);
+    const berlinTime = new Intl.DateTimeFormat('en-GB', {
+        timeZone: timeZone.timeZoneId,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    }).format(new Date());
+
+    return berlinTime;
+}
+
+async function getCityTimeZone(lat, lng) {
+    const url = `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${Math.floor(Date.now() / 1000)}&key=${process.env.TIME_ZONE_API_KEY}`;
+    const response = await fetch(url);
+    return response.json();
 }
 
 function getCurrentTime() {
