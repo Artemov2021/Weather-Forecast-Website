@@ -48,6 +48,8 @@ async function getWeatherData(lat,lng,cityName) {
         daily: data.daily.slice(0, 5)
     };
 
+    console.log(rawData);
+
     return await getFilteredData(rawData,cityName,lat,lng);
 }
 
@@ -61,7 +63,7 @@ async function getFilteredData(data,city,lat,lng) {
     - Humidity = percentage number only
     - Air quality must be: low, medium, or good
     - UV must be: low, medium, or high
-    - Current time in that city is: ${await getCurrentCityTime(lat,lng)}
+    - Current time in that city is: ${await getCurrentCityDate(lat,lng)}
     - City is: ${city}
 
     Hourly forecast:
@@ -123,10 +125,11 @@ async function getFilteredData(data,city,lat,lng) {
     return JSON.parse(response.output_text);
 }
 
-async function getCurrentCityTime(lat,lng) {
+async function getCurrentCityDate(lat,lng) {
     const timeZone = await getCityTimeZone(lat,lng);
     const berlinTime = new Intl.DateTimeFormat('en-GB', {
         timeZone: timeZone.timeZoneId,
+        weekday: 'long',
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
