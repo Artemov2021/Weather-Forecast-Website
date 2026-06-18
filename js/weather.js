@@ -190,7 +190,6 @@ function setHourlyDashboardSymbols() {
 }
 
 function setDailyDashboardTitles() {
-    console.log(JSON.stringify(weatherData));
     const todayData = {
         "weekday": "Today",
         "day_temp": weatherData.current.day_temp,
@@ -299,6 +298,16 @@ function setDailyDashboardNightLine() {
         }
     }
 }
+
+function setDailyDashboardSymbols() {
+    const stateValues = weatherData.daily.map(dailyInfo => dailyInfo.state);
+    stateValues.unshift(weatherData.current.state);
+    
+    for (let i = 0;i < stateValues.length;i++) {
+        const stateSymbol = document.querySelector(`#daily-state-${i+1}`);
+        stateSymbol.src = `assets/images/${stateValues[i]}.png`;
+    }
+}
     
 
 
@@ -319,6 +328,7 @@ function setComponentsValue() {
     setDailyDashboardTitles();
     setDailyDashboardDayLine();
     setDailyDashboardNightLine();
+    setDailyDashboardSymbols();
 }
 
 async function init() {

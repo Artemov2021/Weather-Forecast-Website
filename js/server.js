@@ -48,8 +48,6 @@ async function getWeatherData(lat,lng,cityName) {
         daily: data.daily.slice(0, 5)
     };
 
-    console.log(rawData);
-
     return await getFilteredData(rawData,cityName,lat,lng);
 }
 
