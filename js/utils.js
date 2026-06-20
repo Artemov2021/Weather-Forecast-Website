@@ -2,6 +2,12 @@ let cityDropdown;
 let input;
 let searchForm;
 
+const API_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://weather-forecast-website-production.up.railway.app";
+
+    
 export function initializeELements(inputObject) {
     cityDropdown = inputObject.cityDropdown;
     input = inputObject.input;
@@ -15,7 +21,7 @@ export async function handleInput(inputText) {
 }
 
 async function findCity(query) {
-    const res = await fetch(`http://localhost:3000/get-matched-cities?query=${query}`);
+    const res = await fetch(`${API_URL}/get-matched-cities?query=${query}`)
     const data = await res.json();
     return data.cities;
 } 
@@ -80,7 +86,7 @@ async function handleCityClick(city,placeId) {
 }
 
 async function getWeatherData(placeId,city) {
-    const res = await fetch(`http://localhost:3000/get-weather-data?place_id=${placeId}&city=${city}`);
+    const res = await fetch(`${API_URL}/get-weather-data?place_id=${placeId}&city=${city}`);
     const data = await res.json();
 
     return data;
