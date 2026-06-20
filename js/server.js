@@ -157,6 +157,7 @@ function getCurrentDay() {
 }
 
 async function getMatchedCities(query) {
+    console.log("Google API key exists: " + !!process.env.GOOGLE_API_KEY);
     const response = await fetch(
         `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&types=(cities)&key=${process.env.GOOGLE_API_KEY}`
     );
