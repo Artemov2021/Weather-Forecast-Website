@@ -7,7 +7,7 @@ const API_URL =
     ? "http://localhost:3000"
     : "https://weather-forecast-website-production.up.railway.app";
 
-    
+
 export function initializeELements(inputObject) {
     cityDropdown = inputObject.cityDropdown;
     input = inputObject.input;
@@ -21,6 +21,7 @@ export async function handleInput(inputText) {
 }
 
 async function findCity(query) {
+    console.log("current api url: " + API_URL);
     const res = await fetch(`${API_URL}/get-matched-cities?query=${query}`)
     const data = await res.json();
     return data.cities;
