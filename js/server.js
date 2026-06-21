@@ -61,6 +61,7 @@ async function getFilteredData(data,city,lat,lng) {
     - Humidity = percentage number only
     - Air quality must be: low, medium, or good
     - UV must be: low, medium, or high
+    - Temperature should be a whole number
     - Current time in that city is: ${await getCurrentCityDate(lat,lng)}
     - City is: ${city}
 

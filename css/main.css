@@ -3,7 +3,7 @@ html {
 }
 
 body {
-    background-image: url("../assets/images/landing-background.png");
+    background-image: url("../assets/images/landing-background.webp");
     background-repeat: no-repeat;
     min-height: fit-content;
     font-family: 'Roboto',sans-serif;
