@@ -72,8 +72,8 @@ async function getFilteredWeatherData(rawData) {
             "temp": Math.round(rawData.current.temp),
             "day_temp": Math.round(rawData.daily[0].temp.day),
             "night_temp": Math.round(rawData.daily[0].temp.night),
-            "state": rawData.current.weather[0].main,
-            "day_state": rawData.daily[0].weather[0].main,
+            "condition": rawData.current.weather[0].main,
+            "day_condition": rawData.daily[0].weather[0].main,
             "humidity": rawData.current.humidity,
             "air_quality": await getAirQuality(rawData.lat,rawData.lon),
             "uv": getUV(rawData.current.uvi),
@@ -95,7 +95,7 @@ function getHourlyForecast(rawData) {
         hourlyForecast.push({
             "time": i === 0 ? "Now" : formatTime(rawHourlyData[i].dt, rawData.timezone_offset),
             "temp": Math.round(rawHourlyData[i].temp),
-            "state": rawHourlyData[i].weather[0].main
+            "condition": rawHourlyData[i].weather[0].main
         });
     }
 
@@ -113,7 +113,7 @@ function getDailyForecast(rawData) {
             "week_day": i === 0 ? "Today" : getWeekday(rawDailyData[i].dt,rawData.timezone_offset),
             "day_temp": Math.round(rawDailyData[i].temp.day),
             "night_temp": Math.round(rawDailyData[i].temp.night),
-            "state": rawDailyData[i].weather[0].main
+            "condition": rawDailyData[i].weather[0].main
         });
     }
 
