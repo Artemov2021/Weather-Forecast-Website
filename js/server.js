@@ -6,8 +6,10 @@ const OpenAI = require('openai');
 const client = new OpenAI();
 
 const app = express();
-
 app.use(cors());
+
+let placeId;
+let cityName;
 
 app.get('/get-matched-cities', async (req,res) => {
     const query = req.query.query;
@@ -20,8 +22,8 @@ app.get('/get-matched-cities', async (req,res) => {
 });
 
 app.get('/get-weather-data', async (req,res) => {
-    const placeId = req.query.place_id;
-    const city = req.query.city;
+    placeId = req.query.place_id;
+    cityName = req.query.city;
 
     const response = await fetch(
         `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=geometry&key=${process.env.GOOGLE_API_KEY}`
@@ -30,132 +32,12 @@ app.get('/get-weather-data', async (req,res) => {
     const data = await response.json();
 
     const lat = data.result.geometry.location.lat;
-    const lng = data.result.geometry.location.lng;
+    const lon = data.result.geometry.location.lng;
 
-    const weatherData = await getWeatherData(lat,lng,city);
+    const weatherData = await getWeatherData(lat,lon);
     res.json(weatherData);
 });
 
-async function getWeatherData(lat,lng,cityName) {
-    const response = await fetch(
-        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&units=metric&appid=${process.env.OPENWEATHER_API_KEY}`
-    );
-    const data = await response.json();
-
-    const rawData = {
-        current: data.current,
-        hourly: data.hourly.slice(0, 20),
-        daily: data.daily.slice(0, 5)
-    };
-
-    return await getFilteredData(rawData,cityName,lat,lng);
-}
-
-async function getFilteredData(data,city,lat,lng) {
-    const prompt = `
-    You are a professional helpful assistant. Convert the giving JSON into the following format. Response only in JSON. Dont reply 
-    with quotes at the beginning. 
-    
-    Rules:
-    - Weather state must be exactly one of: sunny, rainy, cloudy, night, snowy
-    - Humidity = percentage number only
-    - Air quality must be: low, medium, or good
-    - UV must be: low, medium, or high
-    - Temperature should be a whole number
-    - Current time in that city is: ${await getCurrentCityDate(lat,lng)}
-    - City is: ${city}
-
-    Hourly forecast:
-    - Return next 6 hours
-    - Start from next full hour in CITY local time
-
-    Daily forecast:
-    - Return next 4 weekdays excluding today
-    - Include:
-        - weekday
-        - day temperature (max)
-        - night temperature (min)
-        - weather state
-
-    Example:
-
-    {
-        "city_name": "London",
-        "current": {
-            "temperature": 23,
-            "day_temp": 21,
-            "night_temp": 8,
-            "state": "sunny",
-            "day_state": "cloudy",
-            "humidity": 34,
-            "air_quality": "Medium",
-            "uv": "low",
-            "sunrise": "06:23",
-            "sunset": "21:34"
-        },
-        "hourly": [
-            {
-                "time": "18:00",
-                "temperature": 21,
-                "state": "rainy"
-            },
-            ...
-        ],
-        "daily": [
-            {
-                "weekday": "Mon",
-                "day_temp": 25,
-                "night_temp": 18,
-                "state": "sunny"
-            },
-            ...
-        ]
-         
-    }
-
-    Raw data: ${JSON.stringify(data)}
-    `;
-
-    const response = await client.responses.create({
-        model: "gpt-4.1-mini",
-        input: prompt
-    });
-
-    return JSON.parse(response.output_text);
-}
-
-async function getCurrentCityDate(lat,lng) {
-    const timeZone = await getCityTimeZone(lat,lng);
-    const berlinTime = new Intl.DateTimeFormat('en-GB', {
-        timeZone: timeZone.timeZoneId,
-        weekday: 'long',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    }).format(new Date());
-
-    return berlinTime;
-}
-
-async function getCityTimeZone(lat, lng) {
-    const url = `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${Math.floor(Date.now() / 1000)}&key=${process.env.TIME_ZONE_API_KEY}`;
-    const response = await fetch(url);
-    return response.json();
-}
-
-function getCurrentTime() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-}
-
-function getCurrentDay() {
-    const weekdayName = new Date().toLocaleDateString("en-US", {
-        weekday: "long"
-    });
-    return weekdayName;
-}
 
 async function getMatchedCities(query) {
     console.log("Google API key exists: " + !!process.env.GOOGLE_API_KEY);
@@ -169,6 +51,116 @@ async function getMatchedCities(query) {
     return data.predictions
         .map(city => ({"city": city.terms[0].value,"country": city.terms[city.terms.length - 1].value,"place_id": city.place_id}));
 }
+
+async function getWeatherData(lat,lon) {
+    const response = await fetch(
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.OPENWEATHER_API_KEY}`
+    );
+    const data = await response.json();
+
+    console.log("Raw data keys: \n",Object.keys(data));
+    console.log("First daily object: ", data.daily[0]);
+    console.log(formatTime(data.hourly[0].dt, data.timezone_offset));
+
+    return await getFilteredWeatherData(data);
+}
+
+async function getFilteredWeatherData(rawData) {
+    return {
+        "city": cityName,
+        "current": {
+            "temp": Math.round(rawData.current.temp),
+            "day_temp": Math.round(rawData.daily[0].temp.day),
+            "night_temp": Math.round(rawData.daily[0].temp.night),
+            "state": rawData.current.weather[0].main,
+            "day_state": rawData.daily[0].weather[0].main,
+            "humidity": rawData.current.humidity,
+            "air_quality": await getAirQuality(rawData.lat,rawData.lon),
+            "uv": getUV(rawData.current.uvi),
+            "sunrise": formatTime(rawData.current.sunrise,rawData.timezone_offset),
+            "sunset": formatTime(rawData.current.sunset,rawData.timezone_offset)
+        },
+        "hourly": getHourlyForecast(rawData),
+        "daily": getDailyForecast(rawData)
+    }
+}
+
+function getHourlyForecast(rawData) {
+    const HOURS_TO_FETCH = 7;
+    const rawHourlyData = rawData.hourly.slice(0,HOURS_TO_FETCH);
+
+    const hourlyForecast = [];
+
+    for (let i = 0;i < rawHourlyData.length;i++) {
+        hourlyForecast.push({
+            "time": i === 0 ? "Now" : formatTime(rawHourlyData[i].dt, rawData.timezone_offset),
+            "temp": Math.round(rawHourlyData[i].temp),
+            "state": rawHourlyData[i].weather[0].main
+        });
+    }
+
+    return hourlyForecast;
+}
+
+function getDailyForecast(rawData) {
+    const DAYS_TO_FETCH = 5;
+    const rawDailyData = rawData.daily.slice(0,DAYS_TO_FETCH);
+
+    const dailyForecast = [];
+
+    for (let i = 0;i < rawDailyData.length;i++) {
+        dailyForecast.push({
+            "week_day": i === 0 ? "Today" : getWeekday(rawDailyData[i].dt,rawData.timezone_offset),
+            "day_temp": Math.round(rawDailyData[i].temp.day),
+            "night_temp": Math.round(rawDailyData[i].temp.night),
+            "state": rawDailyData[i].weather[0].main
+        });
+    }
+
+    return dailyForecast;
+}
+
+function getWeekday(timestamp, timezoneOffset) {
+    const localDate = new Date((timestamp + timezoneOffset) * 1000);
+
+    const weekday = localDate.toLocaleDateString("en-US", {
+        weekday: "short",
+    });
+
+    return weekday;
+}
+
+async function getAirQuality(lat,lon) {
+    const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHER_API_KEY}`
+    );
+
+    const data = await response.json();
+    const aqi = data.list[0].main.aqi;
+
+    if (aqi <= 2) return "Good";
+    if (aqi === 3) return "Medium";
+    return "Bad";
+}
+
+function getUV(uvi) {
+    if (uvi <= 2) return "Low";
+    if (uvi <= 5) return "Moderate";
+    if (uvi <= 7) return "High";
+    if (uvi <= 10) return "Very High";
+    return "Extreme";
+}
+
+function formatTime(timestamp, timezoneOffset) {
+  const date = new Date((timestamp + timezoneOffset) * 1000);
+
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+}
+
+
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');

@@ -3,7 +3,7 @@ let input;
 let searchForm;
 
 const API_URL =
-  window.location.hostname === "localhost"
+  window.location.hostname === "127.0.0.1"
     ? "http://localhost:3000"
     : "https://weather-forecast-website-production.up.railway.app";
 
@@ -77,7 +77,7 @@ async function handleCityClick(city,placeId) {
     try {
         setLoadingStyle();
         const weatherData = await getWeatherData(placeId,city);
-        localStorage.setItem("weatherData",JSON.stringify(weatherData));
+        localStorage.setItem("data",JSON.stringify(weatherData));
         window.location.href = `weather.html`;
         input.value = "";
     } catch(e) {

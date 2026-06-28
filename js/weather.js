@@ -18,12 +18,12 @@ let cityDropdown;
 let weatherData;
 
 async function getWeatherData() {
-    const weatherData = JSON.parse(localStorage.getItem("weatherData"));
+    const weatherData = JSON.parse(localStorage.getItem("data"));
     return weatherData;
 }
 
 function setLocationLabel() {
-    location.textContent = weatherData.city_name;
+    location.textContent = weatherData.city;
 
     const currentPadding = parseInt(window.getComputedStyle(input).paddingLeft);
     const locationLabelWidth = location.offsetWidth;
@@ -31,7 +31,7 @@ function setLocationLabel() {
 }
 
 function setTemperature() {
-    temperature.textContent = `${weatherData.current.temperature}°`;
+    temperature.textContent = `${weatherData.current.temp}°`;
 }
 
 function setWeatherState() {
