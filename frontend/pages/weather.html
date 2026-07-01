@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/reset.css">
+    <link rel="stylesheet" href="../styles/weather.css">
+    <link rel="icon" href="../public/favicon.ico"/>
+    <script src="../js/weather.js" type="module" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <main class="main-section">
+        <form class="input-container">
+            <input class="input" type="text" placeholder="Search for another city...">
+            <img class="location-symbol" src="../public/assets/icons/location.svg">
+            <p class="location-city"></p>
+            <img class="search-loop" src="../public/assets/icons/search-loop.svg">
+        </form>
+
+        <div class="temperature-container">
+            <p class="temperature">15°</p>
+            <div class="weather-condition-container">
+                <img class="condition-symbol" src="../public/assets/icons/clear.svg">
+                <p class="condition">Sunny</p>
+            </div>
+        </div>
+
+        <div class="secondary-info-container">
+            <div class="secondary-info-block" style="animation: fadeLeft 0.85s ease 0.2s forwards">
+                <div class="content">
+                    <p class="air-info-title">Humidity</p>
+                    <div class="value-container">
+                        <img class="value-symbol" src="../public/assets/icons/humidity.svg">
+                        <p id="humidity" class="value">76%</p>
+                    </div>
+                </div>
+                <div class="content">
+                    <p class="air-info-title">Air Quality</p>
+                    <div class="value-container">
+                        <img class="value-symbol" src="../public/assets/icons/air-quality.svg">
+                        <p id="air-quality" class="value">Good</p>
+                    </div>
+                </div>
+                 <div class="content">
+                    <p class="air-info-title">UV</p>
+                    <div class="value-container">
+                        <img class="value-symbol" src="../public/assets/icons/uv.svg">
+                        <p id="uv" class="value">High</p>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-info-block" style="animation: fadeLeft 0.85s ease 0.2s forwards">
+                <div class="content">
+                    <p class="air-info-title">Sunrise:</p>
+                    <div class="value-container">
+                        <p id="sunrise" class="value">7:12</p>
+                    </div>
+                </div>
+                <div class="content">
+                    <img class="sun-phase-image" src="../public/assets/icons/sun-phase.svg">
+                </div>
+                 <div class="content">
+                    <p class="air-info-title">Sunset:</p>
+                    <div class="value-container">
+                        <p id="sunset" class="value">21:12</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weather-forecast-container" style="animation: fadeLeft 0.85s ease 0.4s forwards">
+            <div class="timeline-container">
+                <p id="hour-title-1" class="dashboard-title-highlighted">Now</p>
+                <p id="hour-title-2" class="dashboard-title-default">13:00</p>
+                <p id="hour-title-3" class="dashboard-title-default">14:00</p>
+                <p id="hour-title-4" class="dashboard-title-default">15:00</p>
+                <p id="hour-title-5" class="dashboard-title-default">16:00</p>
+                <p id="hour-title-6" class="dashboard-title-default">17:00</p>
+                <p id="hour-title-7" class="dashboard-title-default">18:00</p>
+            </div>
+            <div id="hourly-temperature-line-container" class="hourly-temperature-line-container"> <svg viewBox="0 0 748 200">
+                    <line id="hour-line-1" x1="4" y1="2" x2="133" y2="75" class="temperature-line" />
+                    <line id="hour-line-2" x1="133" y1="75" x2="252" y2="25" class="temperature-line" />
+                    <line id="hour-line-3" x1="252" y1="25" x2="372" y2="90" class="temperature-line" />
+                    <line id="hour-line-4" x1="372" y1="90" x2="492" y2="35" class="temperature-line" />
+                    <line id="hour-line-5" x1="492" y1="35" x2="610.5" y2="50" class="temperature-line" />
+                    <line id="hour-line-6" x1="610.5" y1="50" x2="745" y2="17" class="temperature-line" />
+                </svg>
+            </div>
+            <div class="status-symbols-container">
+                <img id="hourly-condition-1" src="../public/assets/icons/dashboard-clear.svg">
+                <img id="hourly-condition-2" src="../public/assets/icons/dashboard-clouds.svg">
+                <img id="hourly-condition-3" src="../public/assets/icons/dashboard-clear-night.svg">
+                <img id="hourly-condition-4" src="../public/assets/icons/dashboard-clouds.svg">
+                <img id="hourly-condition-5" src="../public/assets/icons/dashboard-clear.svg">
+                <img id="hourly-condition-6" src="../public/assets/icons/dashboard-rain.svg">
+                <img id="hourly-condition-7" src="../public/assets/icons/dashboard-snow.svg">
+            </div>
+        </div>
+
+        <div class="weather-forecast-container" style="animation: fadeLeft 0.85s ease 0.5s forwards">
+            <div class="timeline-container">
+                <p id="daily-title-1" class="dashboard-title-highlighted">Today</p>
+                <p id="daily-title-2" class="dashboard-title-default">Mon</p>
+                <p id="daily-title-3" class="dashboard-title-default">Tue</p>
+                <p id="daily-title-4" class="dashboard-title-default">Wed</p>
+                <p id="daily-title-5" class="dashboard-title-default">Thu</p>
+            </div>
+                <div id="daily-temperature-line-container" class="daily-temperature-line-container"> <svg viewBox="0 0 748 300">
+                    <line id="day-line-1" x1="4" y1="2" x2="210" y2="75" class="temperature-line" />
+                    <line id="day-line-2" x1="210" y1="75" x2="385" y2="25" class="temperature-line" />
+                    <line id="day-line-3" x1="385" y1="25" x2="558" y2="90" class="temperature-line" />
+                    <line id="day-line-4" x1="558" y1="90" x2="745" y2="17" class="temperature-line" />
+
+                    <line id="night-line-1" x1="4" y1="20" x2="210" y2="75" class="temperature-night-line" />
+                    <line id="night-line-2" x1="210" y1="95" x2="385" y2="25" class="temperature-night-line" />
+                    <line id="night-line-3" x1="385" y1="165" x2="558" y2="90" class="temperature-night-line" />
+                    <line id="night-line-4" x1="558" y1="200" x2="745" y2="17" class="temperature-night-line" />
+                </svg>
+                </div>
+            <div class="status-symbols-container">
+                <img id="daily-condition-1" src="../public/assets/icons/dashboard-clear.svg">
+                <img id="daily-condition-2" src="../public/assets/icons/dashboard-clouds.svg">
+                <img id="daily-condition-3" src="../public/assets/icons/dashboard-clear-night.svg">
+                <img id="daily-condition-4" src="../public/assets/icons/dashboard-clouds.svg">
+                <img id="daily-condition-5" src="../public/assets/icons/dashboard-clear.svg">
+            </div>
+        </div>
+        
+
+    </main>
+</body>
+</html>
