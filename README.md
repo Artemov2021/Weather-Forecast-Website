@@ -19,5 +19,3 @@ Weather data is provided by [OpenWeather](https://openweathermap.org/).
 - Google Maps Places API
 - Google Maps Time Zone API
 - OpenAI API
-
-## Live Demo
